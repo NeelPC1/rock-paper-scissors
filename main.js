@@ -3,52 +3,66 @@
 //range of numbers is from 0 to 2 (1 in array is 0). if 0 is picked, it chooses rock, 1 is paper, 2 is scissors
     //using the brackets after the choice, is the number from the array that is chosen
     //the order matters, you gotta use the variable after its defined
-    function getComputerChoice (){
-        const choice = ["rock", "paper", "scissors"]; 
-        const random = Math.floor(Math.random() * choice.length);
-        return choice[random];
+    let humanScore = 0;
+    let computerScore = 0;
+    let resetButton = document.getElementById("reset");
+    function getComputerChoice() {
+        const choices = ["rock", "paper", "scissors"];
+        const random = Math.floor(Math.random() * choices.length);
+        return choices[random];
     }
     
-    var humanScore = 0;
-    var computerScore = 0;
-    
-    function getHumanChoice(){
-        let hchoice = prompt("Rock, Paper, or Scissors?");
-        if (!hchoice) return null;
-        return hchoice.toLowerCase();
-    }
-    
-    while(humanScore<5 & computerScore<5) {let humanChoice = getHumanChoice();
-        let computerChoice = getComputerChoice();
-        console.log("The computer chooses " + computerChoice + ".");
-        console.log("You chose " + humanChoice + ".");
-    
-        if (humanChoice === computerChoice) {
-            console.log("It's a tie!");
-
-        } else if (
+    function determineWinner(humanChoice, computerChoice) {
+        if (humanChoice === computerChoice) return "draw";
+        if (
             (humanChoice === "rock" && computerChoice === "scissors") ||
-            (humanChoice === "scissors" && computerChoice === "paper") ||
-            (humanChoice === "paper" && computerChoice === "rock")
+            (humanChoice === "paper" && computerChoice === "rock") ||
+            (humanChoice === "scissors" && computerChoice === "paper")
         ) {
-            console.log("You win!");
-            humanScore++;
-        } else {
-            console.log("Computer wins!");
-            computerScore++;
+            return "human";
         }
-        console.log("Computer Score:" + computerScore);
-        console.log("Your score:" + humanScore);
+        return "computer";
+    }
+    
+    function updateScores(winner) {
+        if (winner === "human") humanScore++;
+        if (winner === "computer") computerScore++;
+    }
+    
+    function checkGameEnd() {
+        if (humanScore >= 5) {
+            document.getElementById("winner").textContent = "You win the game!";
+            disableButtons();
+        } else if (computerScore >= 5) {
+            document.getElementById("winner").textContent = "Computer wins the game!";
+            disableButtons();
+        }
+    }
+    
+    function disableButtons() {
+        document.getElementById("rock").disabled = true;
+        document.getElementById("paper").disabled = true;
+        document.getElementById("scissors").disabled = true;
+        document.getElementById("reset").style.display = "block";
+    }
+    
+    function playGame(humanChoice) {
+        let computerChoice = getComputerChoice();
+        document.getElementById("computer-choice").innerHTML = "Computer's choice: " + computerChoice;
+        const winner = determineWinner(humanChoice, computerChoice);
+        updateScores(winner);
+        document.getElementById("human-score").innerHTML = "Your score: "+humanScore;
+        document.getElementById("computer-score").innerHTML = "Computer's score: "+computerScore;
+        checkGameEnd();
+    }
+    let rock= document.getElementById("rock");
+    let paper= document.getElementById("paper");
+    let scissors= document.getElementById("scissors");
 
     
-    
-    }
-
-    if (computerScore==5){
-        console.log("Sorry, you lose!");
-    }
-
-    if (humanScore==5){
-        console.log("Congrats, you win!!!");
-    }
-   
+    document.getElementById("rock").addEventListener("click", ()=> playGame("rock"));
+    document.getElementById("paper").addEventListener("click", ()=> playGame("paper"));
+    document.getElementById("scissors").addEventListener("click", ()=> playGame("scissors"));
+   resetButton.addEventListener("click", function(){
+    location.replace("http://127.0.0.1:5500/main.html");
+   })
