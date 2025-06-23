@@ -64,5 +64,5 @@
     document.getElementById("paper").addEventListener("click", ()=> playGame("paper"));
     document.getElementById("scissors").addEventListener("click", ()=> playGame("scissors"));
    resetButton.addEventListener("click", function(){
-    location.replace("http://127.0.0.1:5500/main.html");
+    location.reload(true);
    })
